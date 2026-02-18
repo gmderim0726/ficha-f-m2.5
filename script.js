@@ -15,22 +15,13 @@ function calcularModificador(attr) {
 }
 
 function calcularPericia(pericia, attr) {
-  // 1. Garante que o nível seja um número
-  const nivelElem = document.getElementById('nivel-valor');
-  const nivel = parseInt(nivelElem.value) || 1;
+  const nivel = parseInt(document.getElementById('nivel-valor').value) || 1;
   
-  // 2. Pega o modificador limpando QUALQUER caractere que não seja número ou sinal de menos
   const modElem = document.getElementById(attr + '-mod');
-  let modAtributo = 0;
-  if (modElem) {
-      // Remove o '+' mas mantém o '-' para cálculos negativos
-      modAtributo = parseInt(modElem.innerText.replace('+', '')) || 0;
-  }
+  const modAtributo = modElem ? parseInt(modElem.innerText.replace('+', '')) : 0;
   
-  const outrosElem = document.getElementById(pericia + '-outros');
-  const outros = outrosElem ? parseInt(outrosElem.value) || 0 : 0;
+  const outros = parseInt(document.getElementById(pericia + '-outros')?.value) || 0;
   
-  // 3. Bônus de Treinamento
   const bonusTreinoBase = 1 + Math.ceil(nivel / 4);
   let bonusFinalTreino = 0;
   
@@ -38,15 +29,13 @@ function calcularPericia(pericia, attr) {
   const mestre = document.getElementById(pericia + '-mestre')?.checked;
 
   if (mestre) {
-    bonusFinalTreino = bonusTreinoBase * 2;
+    // Regra: 1.5x arredondado para baixo
+    bonusFinalTreino = Math.floor(bonusTreinoBase * 1.5);
   } else if (treinado) {
     bonusFinalTreino = bonusTreinoBase;
   }
 
-  // 4. A METADE DO NÍVEL (Importante para Feiticeiros & Maldições)
   const metadeNivel = Math.floor(nivel / 2);
-  
-  // 5. Cálculo Final
   const total = modAtributo + bonusFinalTreino + metadeNivel + outros;
 
   const totalElem = document.getElementById(pericia + '-total');
@@ -65,14 +54,14 @@ function calcularResistencia(res, attr) {
   const nivel = parseInt(document.getElementById('nivel-valor').value) || 1;
   const modElem = document.getElementById(attr + '-mod');
   const modAtributo = modElem ? parseInt(modElem.innerText.replace('+', '')) : 0;
-  const outros = parseInt(document.getElementById(res + '-outros').value) || 0;
+  const outros = parseInt(document.getElementById(res + '-outros')?.value) || 0;
 
-  // Bônus de Treino conforme sua fórmula: 1 + ROUNDUP(Nivel/4)
   const bonusTreinoBase = 1 + Math.ceil(nivel / 4);
   let bonusFinalTreino = 0;
 
   if (mestreElem.checked) {
-    bonusFinalTreino = bonusTreinoBase * 2;
+    // Aplicando a mesma correção de 1.5x
+    bonusFinalTreino = Math.floor(bonusTreinoBase * 1.5);
   } else if (treinoElem.checked) {
     bonusFinalTreino = bonusTreinoBase;
   }
@@ -82,7 +71,6 @@ function calcularResistencia(res, attr) {
 
   totalElem.innerText = (total >= 0 ? "+" : "") + total;
 }
-
 function calcularDefesa() {
   const nivelElem = document.getElementById('nivel-valor');
   const nivel = nivelElem ? parseInt(nivelElem.value) : 1;
