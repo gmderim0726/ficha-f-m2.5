@@ -1,0 +1,1607 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Ficha F&amp;M v2.5</title>
+    <link rel="stylesheet" href="./style.css">
+
+  </head>
+    
+  <body>
+  <div class="ficha-container">
+  <header class="header-ficha">
+    <!-- Barra de Controles de Salvamento -->
+<div class="barra-salvamento">
+  <!--<button class="btn-salvar" onclick="salvarFicha()">💾 Salvar Ficha</button>-->
+  <!--<button class="btn-carregar" onclick="carregarFicha()">📂 Carregar Última</button>-->
+  <button class="btn-exportar" onclick="exportarFicha()">📥 Exportar</button>
+  <button class="btn-importar" onclick="document.getElementById('input-importar').click()">📤 Importar</button>
+  <!--<button class="btn-resetar" onclick="resetarFicha()">🔄 Nova Ficha</button>-->
+  <input type="file" id="input-importar" accept=".json" style="display: none;" onchange="importarFicha(event)">
+  <span class="status-salvamento" id="status-salvamento"></span>
+  
+</div>
+    
+  <div class="logo-area">
+    <h1>FEITICEIROS & MALDIÇÕES</h1>
+    <p>FICHA DE PERSONAGEM v2.5</p>
+  </div>
+  
+  <div class="info-primaria">
+    <div class="input-row">
+      <div class="input-group">
+        <label>NOME</label>
+        <input type="text" placeholder="Nome do Personagem">
+      </div>
+      <div class="input-group">
+        <label>JOGADOR</label>
+        <input type="text" placeholder="Seu nome">
+      </div>
+      <div class="input-group">
+        <label>Nível</label>
+        <input type="number" id="nivel-valor" value="1" oninput="atualizarTudo();">
+      </div>
+    </div>
+    
+    <div class="input-row">
+      <div class="input-group">
+        <label>ESPECIALIZAÇÃO</label>
+        <input type="text" placeholder="Ex: Combate">
+      </div>
+      <div class="input-group">
+        <label>TÉCNICA</label>
+        <input type="text" placeholder="Sua Técnica">
+      </div>
+      <div class="input-group mini">
+        <label>GRAU</label>
+        <input type="text" placeholder="4º">
+      </div>
+    </div>
+  </div>
+</header>
+    </div>
+
+<section class="atributos-grid">
+  <div class="atributo">
+    <label>FORÇA</label>
+    <div class="mod-display" id="for-mod">+0</div>
+    <div class="valor-base-container">
+      <input type="number" id="for-valor" value="10" oninput="calcularModificador('for')">
+    </div>
+  </div>
+
+  <div class="atributo">
+    <label>DESTREZA</label>
+    <div class="mod-display" id="des-mod">+0</div>
+    <div class="valor-base-container">
+      <input type="number" id="des-valor" value="10" oninput="calcularModificador('des')">
+    </div>
+  </div>
+
+  <div class="atributo">
+    <label>CONSTITUIÇÃO</label>
+    <div class="mod-display" id="con-mod">+0</div>
+    <div class="valor-base-container">
+      <input type="number" id="con-valor" value="10" oninput="calcularModificador('con')">
+    </div>
+  </div>
+
+  <div class="atributo">
+    <label>INTELIGÊNCIA</label>
+    <div class="mod-display" id="int-mod">+0</div>
+    <div class="valor-base-container">
+      <input type="number" id="int-valor" value="10" oninput="calcularModificador('int')">
+    </div>
+  </div>
+
+  <div class="atributo">
+    <label>SABEDORIA</label>
+    <div class="mod-display" id="sab-mod">+0</div>
+    <div class="valor-base-container">
+      <input type="number" id="sab-valor" value="10" oninput="calcularModificador('sab')">
+    </div>
+  </div>
+
+  <div class="atributo">
+    <label>PRESENÇA</label>
+    <div class="mod-display" id="pre-mod">+0</div>
+    <div class="valor-base-container">
+      <input type="number" id="pre-valor" value="10" oninput="calcularModificador('pre')">
+    </div>
+  </div>
+</section>
+
+<section class="resistencias-container">
+  <h3>TESTES DE RESISTÊNCIA</h3>
+  <div class="resistencias-grid">
+    
+    <div class="res-card">
+      <div class="res-header">ASTÚCIA <small>(INT)</small></div>
+      <div class="res-total" id="ast-total">+0</div>
+      <div class="res-controles">
+        <label><input type="checkbox" id="ast-treino" onchange="calcularResistencia('ast', 'int')"> T</label>
+        <label><input type="checkbox" id="ast-mestre" onchange="calcularResistencia('ast', 'int')"> M</label>
+        <input type="number" id="ast-outros" value="0" oninput="calcularResistencia('ast', 'int')" placeholder="Outros">
+      </div>
+    </div>
+
+    <div class="res-card">
+      <div class="res-header">FORTITUDE <small>(CON)</small></div>
+      <div class="res-total" id="fort-total">+0</div>
+      <div class="res-controles">
+        <label><input type="checkbox" id="fort-treino" onchange="calcularResistencia('fort', 'con')"> T</label>
+        <label><input type="checkbox" id="fort-mestre" onchange="calcularResistencia('fort', 'con')"> M</label>
+        <input type="number" id="fort-outros" value="0" oninput="calcularResistencia('fort', 'con')">
+      </div>
+    </div>
+    <div class="res-card">
+      <div class="res-header">REFLEXOS <small>(DES)</small></div>
+      <div class="res-total" id="refl-total">+0</div>
+      <div class="res-controles">
+        <label><input type="checkbox" id="refl-treino" onchange="calcularResistencia('refl', 'des')"> T</label>
+        <label><input type="checkbox" id="refl-mestre" onchange="calcularResistencia('refl', 'des')"> M</label>
+        <input type="number" id="refl-outros" value="0" oninput="calcularResistencia('refl', 'des')">
+      </div>
+    </div>
+
+    <div class="res-card">
+      <div class="res-header">VONTADE <small>(SAB)</small></div>
+      <div class="res-total" id="vont-total">+0</div>
+      <div class="res-controles">
+        <label><input type="checkbox" id="vont-treino" onchange="calcularResistencia('vont', 'sab')"> T</label>
+        <label><input type="checkbox" id="vont-mestre" onchange="calcularResistencia('vont', 'sab')"> M</label>
+        <input type="number" id="vont-outros" value="0" oninput="calcularResistencia('vont', 'sab')">
+      </div>
+    </div>
+
+    <div class="res-card">
+  <div class="res-header">INTEGRIDADE <small>(CON)</small></div>
+  <div class="res-total" id="intg-res-total">+0</div>
+  <div class="res-controles">
+    <label><input type="checkbox" id="intg-res-treino" onchange="calcularResistencia('intg-res', 'con')"> T</label>
+    <label><input type="checkbox" id="intg-res-mestre" onchange="calcularResistencia('intg-res', 'con')"> M</label>
+    <input type="number" id="intg-res-outros" value="0" oninput="calcularResistencia('intg-res', 'con')" placeholder="0">
+  </div>
+</div>
+  </div>
+</section>
+
+<div class="status-container-horizontal">
+  <section class="status-vital box-vida">
+    <div class="pv-box">
+      <label>PONTOS DE VIDA</label>
+      <div class="pv-inputs">
+        <input type="number" id="pv-atual" class="input-atual" value="0">
+        <div class="max-container">
+          <span>/</span>
+          <input type="number" id="pv-max" class="input-max" value="0">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="esforco box-esforco">
+    <div class="pe-box">
+      <label>PONTOS DE ENERGIA</label>
+      <div class="pe-inputs">
+        <input type="number" id="pe-atual" class="input-atual" value="0">
+        <div class="max-container">
+          <span>/</span>
+          <input type="number" id="pe-max" class="input-max" value="0">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="integridade box-integridade">
+    <div class="intg-box">
+      <label>PONTOS DE INTEGRIDADE</label>
+      <div class="intg-inputs">
+        <input type="number" id="intg-atual" class="input-atual" value="0">
+        <div class="max-container">
+          <span>/</span>
+          <input type="number" id="intg-max" class="input-max" value="0">
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<section class="combate-container">
+  <div class="defesa-col">
+    <div class="combate-box principal"> <label>DEFESA</label>
+      <div id="defesa-total">10</div>
+      <!--<small id="defesa-formula">10 + 0 (metade do Nível) + 0 (DES)</small>-->
+      <div class="combate-inputs">
+        <div class="mini-input">
+          <label>Equip.</label>
+          <input type="number" id="def-equipo" value="0" oninput="calcularDefesa()">
+        </div>
+        <div class="mini-input">
+          <label>Outros</label>
+          <input type="number" id="def-outros" value="0" oninput="calcularDefesa()">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="secundarios-col">
+    <div class="combate-box">
+      <label>ATENÇÃO</label>
+      <div class="valor-secundario" id="atencao-total">10</div>
+      <div class="combate-inputs">
+        <div class="mini-input">
+          <label>Outros</label>
+          <input type="number" id="atencao-outros" value="0" oninput="calcularAtenção()">
+        </div>
+      </div>
+    </div>
+
+    <div class="combate-box">
+      <label>INICIATIVA</label>
+      <div class="valor-secundario" id="iniciativa-total">+0</div>
+      <div class="combate-inputs">
+        <div class="mini-input">
+          <label>Outros</label>
+          <input type="number" id="iniciativa-outros" value="0" oninput="calcularIniciativa()">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="secundarios-extra-container">
+  <div class="resistencias-grid">
+    <!-- TESTE DE MORTE -->
+<div class="res-card">
+  <div class="res-header">TESTE DE MORTE</div>
+
+  <div class="morte-linha">
+    <div class="morte-grupo">
+      <strong>Sucessos</strong>
+      <label><input type="checkbox" id="morte-s1"> </label>
+      <label><input type="checkbox" id="morte-s2"> </label>
+      <label><input type="checkbox" id="morte-s3"> </label>
+    </div>
+
+    <div class="morte-grupo">
+      <strong>Fracassos</strong>
+      <label><input type="checkbox" id="morte-f1"> </label>
+      <label><input type="checkbox" id="morte-f2"> </label>
+      <label><input type="checkbox" id="morte-f3"> </label>
+    </div>
+  </div>
+</div>
+
+
+    <!-- RD -->
+<div class="res-card rd-card">
+  <div class="res-header">RESISTÊNCIAS</div>
+
+  <div class="rd-area">
+    <input type="text" id="rd-valor" placeholder="Ex: RD 5 Perfurante / RD 4 Cortante / Fogo" />
+  </div>
+</div>
+
+    <!-- DESLOCAMENTO -->
+<div class="res-card">
+  <div class="res-header">DESLOCAMENTO</div>
+  <div class="res-total">
+    <input type="text" id="desloc-valor" value="9m" class="input-desloc" oninput="formatarDeslocamento()">
+    
+    <span style="font-size: 1.2rem; color: #ccc; margin: 0 5px;">➔</span>
+    <input type="text" id="desloc-quadrados" value="6□" class="input-desloc" readonly>
+  </div>
+</div>
+
+  </div>
+</section>
+
+<div class="abas-topo">
+  <button class="btn-aba" onclick="mostrarAba('pericias')" id="btn-pericias">
+    Perícias e Ataques
+  </button>
+
+  <button class="btn-aba" onclick="mostrarAba('habilidades')" id="btn-habilidades">
+    Habilidades
+  </button>
+
+  <button class="btn-aba" onclick="mostrarAba('registro')" id="btn-registro">
+    Registro e Inventário
+  </button>
+
+  <button class="btn-aba" onclick="mostrarAba('amaldicoado')" id="btn-amaldicoado">
+    Perfil Amaldiçoado
+  </button>
+
+  <button class="btn-aba" onclick="mostrarAba('invocacoes')" id="btn-invocacoes">Invocações</button>
+  <button class="btn-aba" onclick="mostrarAba('treinamentos')" id="btn-treinamentos">Treinamentos</button>
+</div>
+
+<div id="aba-pericias" class="aba-conteudo">
+<section class="painel-pericias-ataques">
+<section class="pericias-container">
+    <h3>PERÍCIAS</h3>
+    <table class="tabela-pericias">
+      <thead>
+        <tr>
+          <th>Perícia</th>
+          <th>Attr</th>
+          <th>Treino</th>
+          <th>Outros</th> <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>Atletismo</td>
+      <td>FOR</td>
+        <td>
+        <input type="checkbox" id="atl-treino" onchange="calcularPericia('atl', 'for')"> <span>T</span>
+        <input type="checkbox" id="atl-mestre" onchange="calcularPericia('atl', 'for')"> <span>M</span>
+        </td>
+        <td><input type="number" id="atl-outros" value="0" class="input-pequeno" oninput="calcularPericia('atl', 'for')"></td>
+        <td class="total-pericia" id="atl-total">+0</td>
+      </tr>
+      <tr>
+      <td>Acrobacia</td>
+      <td>DES</td>
+        <td>
+        <input type="checkbox" id="acr-treino" onchange="calcularPericia('acr', 'des')"> <span>T</span>
+        <input type="checkbox" id="acr-mestre" onchange="calcularPericia('acr', 'des')"> <span>M</span>
+        </td>
+        <td><input type="number" id="acr-outros" value="0" class="input-pequeno" oninput="calcularPericia('acr', 'des')"></td>
+        <td class="total-pericia" id="acr-total">+0</td>
+      </tr>
+            <tr>
+      <td>Furtividade</td>
+      <td>DES</td>
+        <td>
+        <input type="checkbox" id="furt-treino" onchange="calcularPericia('furt', 'des')"> <span>T</span>
+        <input type="checkbox" id="furt-mestre" onchange="calcularPericia('furt', 'des')"> <span>M</span>
+        </td>
+        <td><input type="number" id="furt-outros" value="0" class="input-pequeno" oninput="calcularPericia('furt', 'des')"></td>
+        <td class="total-pericia" id="furt-total">+0</td>
+      </tr>
+      <tr>
+      <td>Prestidigitação</td>
+      <td>DES</td>
+        <td>
+        <input type="checkbox" id="prs-treino" onchange="calcularPericia('prs', 'des')"> <span>T</span>
+        <input type="checkbox" id="prs-mestre" onchange="calcularPericia('prs', 'des')"> <span>M</span>
+        </td>
+        <td><input type="number" id="prs-outros" value="0" class="input-pequeno" oninput="calcularPericia('prs', 'des')"></td>
+        <td class="total-pericia" id="prs-total">+0</td>
+      </tr>
+      <tr>
+      <td>Feitiçaria</td>
+      <td>INT</td>
+        <td>
+        <input type="checkbox" id="fei-treino" onchange="calcularPericia('fei', 'int')"> <span>T</span>
+        <input type="checkbox" id="fei-mestre" onchange="calcularPericia('fei', 'int')"> <span>M</span>
+        </td>
+        <td><input type="number" id="fei-outros" value="0" class="input-pequeno" oninput="calcularPericia('fei', 'int')"></td>
+        <td class="total-pericia" id="fei-total">+0</td>
+      </tr>
+      <tr>
+      <td>História</td>
+      <td>INT</td>
+        <td>
+        <input type="checkbox" id="his-treino" onchange="calcularPericia('his', 'int')"> <span>T</span>
+        <input type="checkbox" id="his-mestre" onchange="calcularPericia('his', 'int')"> <span>M</span>
+        </td>
+        <td><input type="number" id="his-outros" value="0" class="input-pequeno" oninput="calcularPericia('his', 'int')"></td>
+        <td class="total-pericia" id="his-total">+0</td>
+      </tr>
+            <tr>
+      <td>Ofício</td>
+      <td>INT</td>
+        <td>
+        <input type="checkbox" id="ofi1-treino" onchange="calcularPericia('ofi1', 'int')"> <span>T</span>
+        <input type="checkbox" id="ofi1-mestre" onchange="calcularPericia('ofi1', 'int')"> <span>M</span>
+        </td>
+        <td><input type="number" id="ofi1-outros" value="0" class="input-pequeno" oninput="calcularPericia('ofi1', 'int')"></td>
+        <td class="total-pericia" id="ofi1-total">+0</td>
+      </tr>
+      <tr>
+      <td>Ofício</td>
+      <td>INT</td>
+        <td>
+        <input type="checkbox" id="ofi2-treino" onchange="calcularPericia('ofi2', 'int')"> <span>T</span>
+        <input type="checkbox" id="ofi2-mestre" onchange="calcularPericia('ofi2', 'int')"> <span>M</span>
+        </td>
+        <td><input type="number" id="ofi2-outros" value="0" class="input-pequeno" oninput="calcularPericia('ofi2', 'int')"></td>
+        <td class="total-pericia" id="ofi2-total">+0</td>
+      </tr>
+      <tr>
+      <td>Tecnologia</td>
+      <td>INT</td>
+        <td>
+        <input type="checkbox" id="tec-treino" onchange="calcularPericia('tec', 'int')"> <span>T</span>
+        <input type="checkbox" id="tec-mestre" onchange="calcularPericia('tec', 'int')"> <span>M</span>
+        </td>
+        <td><input type="number" id="tec-outros" value="0" class="input-pequeno" oninput="calcularPericia('tec', 'int')"></td>
+        <td class="total-pericia" id="tec-total">+0</td>
+      </tr>
+      <tr>
+      <td>Direção</td>
+      <td>SAB</td>
+        <td>
+        <input type="checkbox" id="dir-treino" onchange="calcularPericia('dir', 'sab')"> <span>T</span>
+        <input type="checkbox" id="dir-mestre" onchange="calcularPericia('dir', 'sab')"> <span>M</span>
+        </td>
+        <td><input type="number" id="dir-outros" value="0" class="input-pequeno" oninput="calcularPericia('dir', 'sab')"></td>
+        <td class="total-pericia" id="dir-total">+0</td>
+      </tr>
+      <tr>
+      <td>Intuição</td>
+      <td>SAB</td>
+        <td>
+        <input type="checkbox" id="intu-treino" onchange="calcularPericia('intu', 'sab')"> <span>T</span>
+        <input type="checkbox" id="intu-mestre" onchange="calcularPericia('intu', 'sab')"> <span>M</span>
+        </td>
+        <td><input type="number" id="intu-outros" value="0" class="input-pequeno" oninput="calcularPericia('intu', 'sab')"></td>
+        <td class="total-pericia" id="intu-total">+0</td>
+      </tr>
+            <tr>
+      <td>Medicina</td>
+      <td>SAB</td>
+        <td>
+        <input type="checkbox" id="med-treino" onchange="calcularPericia('med', 'sab')"> <span>T</span>
+        <input type="checkbox" id="med-mestre" onchange="calcularPericia('med', 'sab')"> <span>M</span>
+        </td>
+        <td><input type="number" id="med-outros" value="0" class="input-pequeno" oninput="calcularPericia('med', 'sab')"></td>
+        <td class="total-pericia" id="med-total">+0</td>
+      </tr>
+      <tr>
+      <td>Ocultismo</td>
+      <td>SAB</td>
+        <td>
+        <input type="checkbox" id="ocu-treino" onchange="calcularPericia('ocu', 'sab')"> <span>T</span>
+        <input type="checkbox" id="ocu-mestre" onchange="calcularPericia('ocu', 'sab')"> <span>M</span>
+        </td>
+        <td><input type="number" id="ocu-outros" value="0" class="input-pequeno" oninput="calcularPericia('ocu', 'sab')"></td>
+        <td class="total-pericia" id="ocu-total">+0</td>
+      </tr>
+      <tr>
+      <td>Percepção</td>
+      <td>SAB</td>
+        <td>
+        <input type="checkbox" id="pcp-treino" onchange="calcularPericia('pcp', 'sab')"> <span>T</span>
+        <input type="checkbox" id="pcp-mestre" onchange="calcularPericia('pcp', 'sab')"> <span>M</span>
+        </td>
+        <td><input type="number" id="pcp-outros" value="0" class="input-pequeno" oninput="calcularPericia('pcp', 'sab')"></td>
+        <td class="total-pericia" id="pcp-total">+0</td>
+      </tr>
+      <tr>
+      <td>Sobrevivência</td>
+      <td>SAB</td>
+        <td>
+        <input type="checkbox" id="scia-treino" onchange="calcularPericia('scia', 'sab')"> <span>T</span>
+        <input type="checkbox" id="scia-mestre" onchange="calcularPericia('scia', 'sab')"> <span>M</span>
+        </td>
+        <td><input type="number" id="scia-outros" value="0" class="input-pequeno" oninput="calcularPericia('scia', 'sab')"></td>
+        <td class="total-pericia" id="scia-total">+0</td>
+      </tr>
+            <tr>
+      <td>Enganação</td>
+      <td>PRE</td>
+        <td>
+        <input type="checkbox" id="eng-treino" onchange="calcularPericia('eng', 'pre')"> <span>T</span>
+        <input type="checkbox" id="eng-mestre" onchange="calcularPericia('eng', 'pre')"> M
+        </td>
+        <td><input type="number" id="eng-outros" value="0" class="input-pequeno" oninput="calcularPericia('eng', 'pre')"></td>
+        <td class="total-pericia" id="eng-total">+0</td>
+      </tr>
+      <tr>
+      <td>Intimidação</td>
+      <td>PRE</td>
+        <td>
+        <input type="checkbox" id="inti-treino" onchange="calcularPericia('inti', 'pre')"> <span>T</span>
+        <input type="checkbox" id="inti-mestre" onchange="calcularPericia('inti', 'pre')"> M
+        </td>
+        <td><input type="number" id="inti-outros" value="0" class="input-pequeno" oninput="calcularPericia('inti', 'pre')"></td>
+        <td class="total-pericia" id="inti-total">+0</td>
+      </tr>
+        <tr>
+      <td>Performance</td>
+      <td>PRE</td>
+        <td>
+        <input type="checkbox" id="pce-treino" onchange="calcularPericia('pce', 'pre')"> <span>T</span>
+        <input type="checkbox" id="pce-mestre" onchange="calcularPericia('pce', 'pre')"> <span>M</span>
+        </td>
+        <td><input type="number" id="pce-outros" value="0" class="input-pequeno" oninput="calcularPericia('pce', 'pre')"></td>
+        <td class="total-pericia" id="pce-total">+0</td>
+      </tr>
+      <tr>
+      <td>Persuasão</td>
+      <td>PRE</td>
+        <td>
+        <input type="checkbox" id="pao-treino" onchange="calcularPericia('pao', 'pre')"> <span>T</span>
+        <input type="checkbox" id="pao-mestre" onchange="calcularPericia('pao', 'pre')"> <span>M</span>
+        </td>
+        <td><input type="number" id="pao-outros" value="0" class="input-pequeno" oninput="calcularPericia('pao', 'pre')"></td>
+        <td class="total-pericia" id="pao-total">+0</td>
+      </tr>
+    </tbody>
+    </table>
+  </section>
+
+<section class="ataques-container">
+    <h3>JOGADAS DE ATAQUE</h3>
+
+    <div class="ataques-grid">
+
+      <div class="atk-card">
+        <div class="atk-header">CORPO A CORPO</div>
+        <div class="atk-total" id="cac-total">+0</div>
+
+        <div class="atk-controles">
+          <label><input type="checkbox" id="cac-treino" onchange="atualizarTudo()"> T</label>
+          <input type="number" id="cac-outros" value="0" oninput="atualizarTudo()" placeholder="Outros">
+        </div>
+
+        <div class="atk-atributo">
+          <label>Atributo</label>
+          <select id="cac-attr" onchange="atualizarTudo()">
+            <option value="for">FOR</option>
+            <option value="des">DES</option>
+            <option value="con">CON</option>
+            <option value="int">INT</option>
+            <option value="sab">SAB</option>
+            <option value="pre">PRE</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="atk-card">
+        <div class="atk-header">A DISTÂNCIA</div>
+        <div class="atk-total" id="dist-total">+0</div>
+
+        <div class="atk-controles">
+          <label><input type="checkbox" id="dist-treino" onchange="atualizarTudo()"> T</label>
+          <input type="number" id="dist-outros" value="0" oninput="atualizarTudo()" placeholder="Outros">
+        </div>
+
+        <div class="atk-atributo">
+          <label>Atributo</label>
+          <select id="dist-attr" onchange="atualizarTudo()">
+            <option value="des">DES</option>
+            <option value="for">FOR</option>
+            <option value="con">CON</option>
+            <option value="int">INT</option>
+            <option value="sab">SAB</option>
+            <option value="pre">PRE</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="atk-card">
+        <div class="atk-header">AMALDIÇOADO</div>
+        <div class="atk-total" id="amal-total">+0</div>
+
+        <div class="atk-controles">
+          <label><input type="checkbox" id="amal-treino" onchange="atualizarTudo()"> T</label>
+          <input type="number" id="amal-outros" value="0" oninput="atualizarTudo()" placeholder="Outros">
+        </div>
+
+        <div class="atk-atributo">
+          <label>Atributo</label>
+          <select id="amal-attr" onchange="atualizarTudo()">
+            <option value="int">INT</option>
+            <option value="pre">PRE</option>
+            <option value="sab">SAB</option>
+            <option value="for">FOR</option>
+            <option value="des">DES</option>
+            <option value="con">CON</option>
+          </select>
+        </div>
+      </div>
+
+    </div>
+  <!-- TABELA DE ATAQUES ABAIXO -->
+  <div class="ataques-tabela-container">
+    <h3>ATAQUES</h3>
+
+    <table class="tabela-ataques">
+      <thead>
+        <tr>
+          <th>ATAQUE</th>
+          <th>BÔNUS</th>
+          <th>DANO</th>
+          <th>CRIT.</th>
+          <th>TIPO</th>
+          <th>ALCANCE</th>
+          <th>PROPRIEDADES</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+        </tr>
+
+        <tr>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+        </tr>
+
+        <tr>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+        </tr>
+
+        <tr>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+        </tr>
+
+        <tr>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+          <td><input type="text"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+<div class="anotacoes-row">
+  <div class="anotacoes-container">
+    <h3>TREINAMENTOS (Proficiências)</h3>
+    <textarea id="treinamentos-texto" placeholder="Idiomas, Armas, Veículos..."></textarea>
+  </div>
+
+  <div class="anotacoes-container">
+    <h3>CARACTERÍSTICAS</h3>
+    <textarea id="carac-texto" placeholder="Inato, Derivado, Restringido..."></textarea>
+  </div>
+</div>
+
+<div class="anotacoes-container">
+  <h3>ANOTAÇÕES</h3>
+  <textarea id="anotacoes-texto" placeholder="Escreva aqui..."></textarea>
+</div>
+</div>  
+
+
+
+<div id="aba-habilidades" class="aba-conteudo">
+  <div class="habilidades-container">
+    
+    <!-- CD de Especialização (canto superior esquerdo) -->
+    <div class="cd-especializacao-box">
+      <div class="cd-header">CD Especialização</div>
+      <div class="cd-total" id="cd-espec-total">12</div>
+      
+      <div class="cd-detalhes">
+        <div class="cd-linha">
+          <span>Base</span>
+          <span class="cd-valor">10</span>
+        </div>
+        <div class="cd-linha">
+          <span>Atributo</span>
+          <select id="cd-espec-attr" onchange="atualizarTudo()">
+            <option value="for">FOR</option>
+            <option value="des">DES</option>
+            <option value="con">CON</option>
+            <option value="int" selected>INT</option>
+            <option value="sab">SAB</option>
+            <option value="pre">PRE</option>
+          </select>
+          <span class="cd-valor" id="cd-espec-mod-valor">0</span>
+        </div>
+        <div class="cd-linha">
+          <span>Treino</span>
+          <input type="checkbox" id="cd-espec-treino" onchange="atualizarTudo()">
+          <span class="cd-valor" id="cd-espec-treino-valor">2</span>
+        </div>
+        <div class="cd-linha">
+          <span>Nível/2</span>
+          <span class="cd-valor" id="cd-espec-nivel-valor">0</span>
+        </div>
+        <div class="cd-linha">
+          <span>Outros</span>
+          <input type="number" id="cd-espec-outros" value="0" oninput="atualizarTudo()">
+        </div>
+      </div>
+    </div>
+    
+    <!-- Lista de Habilidades -->
+<!-- Lista de Habilidades -->
+<div class="habilidades-lista" id="lista-habilidades">
+<div class="habilidade-card">
+  <div class="habilidade-header" onclick="toggleHabilidade(this)">
+    <div class="habilidade-info-top">
+      <input type="text" class="habilidade-nome" placeholder="Nome da Habilidade" onclick="event.stopPropagation()">
+      <div class="habilidade-usos">
+        <label>Atual</label>
+        <input type="number" min="0" value="0" onclick="event.stopPropagation()">
+        <span>/</span>
+        <label>Máx.</label>
+        <input type="number" min="0" value="0" onclick="event.stopPropagation()">
+      </div>
+    </div>
+    <div class="habilidade-acoes">
+      <button class="toggle-btn">▼</button>
+      <button class="btn-remover-habilidade" onclick="removerHabilidade(this); event.stopPropagation();">🗑️</button>
+    </div>
+  </div>
+  <div class="habilidade-descricao" style="display: none;">
+    <textarea placeholder="Descrição da habilidade..."></textarea>
+  </div>
+</div>
+  
+<div class="habilidade-card">
+  <div class="habilidade-header" onclick="toggleHabilidade(this)">
+    <div class="habilidade-info-top">
+      <input type="text" class="habilidade-nome" placeholder="Nome da Habilidade" onclick="event.stopPropagation()">
+      <div class="habilidade-usos">
+        <label>Atual</label>
+        <input type="number" min="0" value="0" onclick="event.stopPropagation()">
+        <span>/</span>
+        <label>Máx.</label>
+        <input type="number" min="0" value="0" onclick="event.stopPropagation()">
+      </div>
+    </div>
+    <div class="habilidade-acoes">
+      <button class="toggle-btn">▼</button>
+      <button class="btn-remover-habilidade" onclick="removerHabilidade(this); event.stopPropagation();">🗑️</button>
+    </div>
+  </div>
+  <div class="habilidade-descricao" style="display: none;">
+    <textarea placeholder="Descrição da habilidade..."></textarea>
+  </div>
+</div>
+  
+<div class="habilidade-card">
+  <div class="habilidade-header" onclick="toggleHabilidade(this)">
+    <div class="habilidade-info-top">
+      <input type="text" class="habilidade-nome" placeholder="Nome da Habilidade" onclick="event.stopPropagation()">
+      <div class="habilidade-usos">
+        <label>Atual</label>
+        <input type="number" min="0" value="0" onclick="event.stopPropagation()">
+        <span>/</span>
+        <label>Máx.</label>
+        <input type="number" min="0" value="0" onclick="event.stopPropagation()">
+      </div>
+    </div>
+    <div class="habilidade-acoes">
+      <button class="toggle-btn">▼</button>
+      <button class="btn-remover-habilidade" onclick="removerHabilidade(this); event.stopPropagation();">🗑️</button>
+    </div>
+  </div>
+  <div class="habilidade-descricao" style="display: none;">
+    <textarea placeholder="Descrição da habilidade..."></textarea>
+  </div>
+</div>
+  
+<div class="habilidade-card">
+  <div class="habilidade-header" onclick="toggleHabilidade(this)">
+    <div class="habilidade-info-top">
+      <input type="text" class="habilidade-nome" placeholder="Nome da Habilidade" onclick="event.stopPropagation()">
+      <div class="habilidade-usos">
+        <label>Atual</label>
+        <input type="number" min="0" value="0" onclick="event.stopPropagation()">
+        <span>/</span>
+        <label>Máx.</label>
+        <input type="number" min="0" value="0" onclick="event.stopPropagation()">
+      </div>
+    </div>
+    <div class="habilidade-acoes">
+      <button class="toggle-btn">▼</button>
+      <button class="btn-remover-habilidade" onclick="removerHabilidade(this); event.stopPropagation();">🗑️</button>
+    </div>
+  </div>
+  <div class="habilidade-descricao" style="display: none;">
+    <textarea placeholder="Descrição da habilidade..."></textarea>
+  </div>
+</div>
+  
+<div class="habilidade-card">
+  <div class="habilidade-header" onclick="toggleHabilidade(this)">
+    <div class="habilidade-info-top">
+      <input type="text" class="habilidade-nome" placeholder="Nome da Habilidade" onclick="event.stopPropagation()">
+      <div class="habilidade-usos">
+        <label>Atual</label>
+        <input type="number" min="0" value="0" onclick="event.stopPropagation()">
+        <span>/</span>
+        <label>Máx.</label>
+        <input type="number" min="0" value="0" onclick="event.stopPropagation()">
+      </div>
+    </div>
+    <div class="habilidade-acoes">
+      <button class="toggle-btn">▼</button>
+      <button class="btn-remover-habilidade" onclick="removerHabilidade(this); event.stopPropagation();">🗑️</button>
+    </div>
+  </div>
+  <div class="habilidade-descricao" style="display: none;">
+    <textarea placeholder="Descrição da habilidade..."></textarea>
+  </div>
+</div>
+  
+<div class="habilidade-card">
+  <div class="habilidade-header" onclick="toggleHabilidade(this)">
+    <div class="habilidade-info-top">
+      <input type="text" class="habilidade-nome" placeholder="Nome da Habilidade" onclick="event.stopPropagation()">
+      <div class="habilidade-usos">
+        <label>Atual</label>
+        <input type="number" min="0" value="0" onclick="event.stopPropagation()">
+        <span>/</span>
+        <label>Máx.</label>
+        <input type="number" min="0" value="0" onclick="event.stopPropagation()">
+      </div>
+    </div>
+    <div class="habilidade-acoes">
+      <button class="toggle-btn">▼</button>
+      <button class="btn-remover-habilidade" onclick="removerHabilidade(this); event.stopPropagation();">🗑️</button>
+    </div>
+  </div>
+  <div class="habilidade-descricao" style="display: none;">
+    <textarea placeholder="Descrição da habilidade..."></textarea>
+  </div>
+</div>
+  
+  <!-- Botão Adicionar Habilidade -->
+  <button class="btn-adicionar-habilidade" onclick="adicionarHabilidade()">
+    ➕ Adicionar Habilidade
+  </button>
+</div>
+    
+  </div>
+</div>
+
+<div id="aba-registro" class="aba-conteudo">
+  <div class="registro-inventario-container">
+    
+    <!-- Coluna da Esquerda: Aparência -->
+    <div class="coluna-esquerda">
+      
+<!-- Aparência -->
+<section class="aparencia-box">
+  <div class="aparencia-imagem" id="aparencia-preview">
+    <div class="placeholder-imagem" id="placeholder-texto">APARÊNCIA</div>
+    <img id="imagem-personagem" style="display: none; width: 100%; height: 100%; object-fit: cover;">
+  </div>
+  
+  <div class="upload-imagem-container">
+    <label for="upload-aparencia" class="btn-upload">
+      📷 Adicionar Imagem
+    </label>
+    <input type="file" id="upload-aparencia" accept="image/*" style="display: none;">
+    <button class="btn-remover" id="btn-remover-imagem" style="display: none;">
+      🗑️ Remover
+    </button>
+  </div>
+  
+  <div class="aparencia-campos">
+    <div class="campo-aparencia">
+      <label>NOME</label>
+      <input type="text" placeholder="Nome">
+    </div>
+    <div class="campo-aparencia">
+      <label>IDADE</label>
+      <input type="text" placeholder="25">
+    </div>
+    <div class="campo-aparencia">
+      <label>ALTURA</label>
+      <input type="text" placeholder="1,75m">
+    </div>
+    <div class="campo-aparencia">
+      <label>PESO</label>
+      <input type="text" placeholder="70kg">
+    </div>
+    <div class="campo-aparencia">
+      <label>GÊNERO</label>
+      <input type="text" placeholder="Masculino">
+    </div>
+    <div class="campo-aparencia">
+      <label>CABELOS</label>
+      <input type="text" placeholder="Preto">
+    </div>
+    <div class="campo-aparencia">
+      <label>OLHOS</label>
+      <input type="text" placeholder="Castanhos">
+    </div>
+    <div class="campo-aparencia">
+      <label>PELE</label>
+      <input type="text" placeholder="Morena">
+    </div>
+    <div class="campo-aparencia">
+      <label>ROUPAS</label>
+      <input type="text" placeholder="Estilo">
+    </div>
+    <div class="campo-aparencia">
+      <label>MARCA</label>
+      <input type="text" placeholder="Cicatrizes">
+    </div>
+  </div>
+</section>
+      
+      <!-- Tabela de Personalidade -->
+      <section class="personalidade-tabela-box">
+        <h3>TRAÇOS DE PERSONALIDADE</h3>
+        <textarea placeholder="Descreva..."></textarea>
+      </section>
+      
+      <section class="personalidade-tabela-box">
+        <h3>IDEAIS</h3>
+        <textarea placeholder="Quais são..."></textarea>
+      </section>
+      
+      <section class="personalidade-tabela-box">
+        <h3>LIGAÇÕES</h3>
+        <textarea placeholder="Pessoas, lugares..."></textarea>
+      </section>
+      
+      <section class="personalidade-tabela-box">
+        <h3>COMPLICAÇÕES</h3>
+        <textarea placeholder="Fraquezas..."></textarea>
+      </section>
+      
+      <section class="personalidade-tabela-box">
+        <h3>DOMÍNIO INATO</h3>
+        <textarea placeholder="Descrição..."></textarea>
+      </section>
+      
+    </div>
+    
+    <!-- Coluna da Direita: Inventário -->
+    <div class="coluna-direita">
+      
+      <section class="inventario-box">
+        <h3>INVENTÁRIO</h3>
+        
+        <table class="tabela-inventario">
+          <thead>
+            <tr>
+              <th>NOME DO ITEM</th>
+              <th>QUANT.</th>
+              <th>PESO</th>
+              <th>PREÇO</th>
+            </tr>
+          </thead>
+          <tbody>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr><tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+  <tr><td><input type="text" class="item-nome" placeholder="Item"></td><td><input type="number" class="item-quant" min="1" value="1" oninput="calcularEspacosOcupados()"></td><td><input type="text" class="item-peso" placeholder="0kg" oninput="calcularEspacosOcupados()"></td><td><input type="text" placeholder="$0"></td></tr>
+</tbody>
+        </table>
+        
+        <div class="inventario-footer">
+  <div class="espacos-info">
+    <div class="espacos-ocupados">
+      <label>Espaços Ocupados</label>
+      <input type="number" id="espacos-ocupados" value="0" readonly>
+    </div>
+    <div class="espacos-limite">
+      <label>Limite de Espaços</label>
+      <input type="number" id="limite-espacos" value="8" readonly>
+    </div>
+  </div>
+</div>
+        
+        
+      </section>
+      
+    </div>
+    
+  </div>
+</div>
+
+<div id="aba-amaldicoado" class="aba-conteudo">
+  <div class="amaldicoado-container">
+    
+    <!-- Seção Superior -->
+    <div class="amaldicoado-topo">
+      
+      <!-- CD Amaldiçoado (Esquerda) -->
+      <div class="cd-amaldicoado-box">
+        <div class="cd-header">CD Amaldiçoado</div>
+        <div class="cd-total" id="cd-amal-total">12</div>
+        
+        <div class="cd-detalhes">
+          <div class="cd-linha">
+            <span>Base</span>
+            <span class="cd-valor">10</span>
+          </div>
+          <div class="cd-linha">
+            <span>Atributo</span>
+            <select id="cd-amal-attr" onchange="calcularCDAmaldicoado()">
+              <option value="for">FOR</option>
+              <option value="des">DES</option>
+              <option value="con">CON</option>
+              <option value="int" selected>INT</option>
+              <option value="sab">SAB</option>
+              <option value="pre">PRE</option>
+            </select>
+            <span class="cd-valor" id="cd-amal-mod-valor">0</span>
+          </div>
+          <div class="cd-linha treino-sempre">
+            <span>Treino</span>
+            <span class="treino-badge">SEMPRE</span>
+            <span class="cd-valor" id="cd-amal-treino-valor">2</span>
+          </div>
+          <div class="cd-linha">
+            <span>Nível/2</span>
+            <span class="cd-valor" id="cd-amal-nivel-valor">0</span>
+          </div>
+          <div class="cd-linha">
+            <span>Outros</span>
+            <input type="number" id="cd-amal-outros" value="0" oninput="calcularCDAmaldicoado()">
+          </div>
+        </div>
+      </div>
+      
+      <!-- Técnica Amaldiçoada (Centro) -->
+      <div class="tecnica-amaldicoada-box">
+        <div class="tecnica-header">
+          <label>TÉCNICA AMALDIÇOADA</label>
+          <input type="text" id="tecnica-nome" placeholder="Nome da Técnica">
+        </div>
+        
+        <div class="tecnica-descricao">
+          <label>DESCRIÇÃO</label>
+          <textarea id="tecnica-descricao" placeholder="Descreva sua técnica amaldiçoada..."></textarea>
+        </div>
+      </div>
+      
+      <!-- Contador de Técnicas (Direita) -->
+      <div class="contador-tecnicas-box">
+        <label>FEITIÇOS CONHECIDOS</label>
+        <input type="number" id="tecnicas-conhecidas" min="0" value="0">
+      </div>
+      
+    </div>
+   
+    <div class="aptidoes-feiticos-wrapper">
+    
+    <!-- Seção de Aptidões Amaldiçoadas (abaixo do CD) -->
+<div class="aptidoes-amaldicoadas-container">
+  
+  <!-- Níveis de Aptidão -->
+  <div class="niveis-aptidao-box">
+    <div class="nivel-aptidao-item">
+      <label>AURA</label>
+      <input type="number" min="0" max="10" value="0">
+    </div>
+    <div class="nivel-aptidao-item">
+      <label>LEITURA</label>
+      <input type="number" min="0" max="10" value="0">
+    </div>
+    <div class="nivel-aptidao-item">
+      <label>BARREIRA</label>
+      <input type="number" min="0" max="10" value="0">
+    </div>
+    <div class="nivel-aptidao-item">
+      <label>DOMÍNIO</label>
+      <input type="number" min="0" max="10" value="0">
+    </div>
+    <div class="nivel-aptidao-item">
+      <label>REVERSA</label>
+      <input type="number" min="0" max="10" value="0">
+    </div>
+  </div>
+  
+  <!-- Lista de Aptidões -->
+  <div class="aptidoes-lista" id="lista-aptidoes-amaldicoadas">
+    
+    <!-- Card de Aptidão 1 -->
+    <div class="aptidao-card">
+      <div class="aptidao-header" onclick="toggleAptidaoAmaldicoada(this)">
+        <input type="text" class="aptidao-nome" placeholder="Nome da Aptidão" onclick="event.stopPropagation()">
+        <div class="aptidao-acoes">
+          <button class="toggle-btn">▼</button>
+          <button class="btn-remover-aptidao" onclick="removerAptidaoAmaldicoada(this); event.stopPropagation();">🗑️</button>
+        </div>
+      </div>
+      <div class="aptidao-descricao" style="display: none;">
+        <textarea placeholder="Descrição da aptidão amaldiçoada..."></textarea>
+      </div>
+    </div>
+    
+    <!-- Card de Aptidão 2 -->
+    <div class="aptidao-card">
+      <div class="aptidao-header" onclick="toggleAptidaoAmaldicoada(this)">
+        <input type="text" class="aptidao-nome" placeholder="Nome da Aptidão" onclick="event.stopPropagation()">
+        <div class="aptidao-acoes">
+          <button class="toggle-btn">▼</button>
+          <button class="btn-remover-aptidao" onclick="removerAptidaoAmaldicoada(this); event.stopPropagation();">🗑️</button>
+        </div>
+      </div>
+      <div class="aptidao-descricao" style="display: none;">
+        <textarea placeholder="Descrição da aptidão amaldiçoada..."></textarea>
+      </div>
+    </div>
+    
+    <!-- Card de Aptidão 3 -->
+    <div class="aptidao-card">
+      <div class="aptidao-header" onclick="toggleAptidaoAmaldicoada(this)">
+        <input type="text" class="aptidao-nome" placeholder="Nome da Aptidão" onclick="event.stopPropagation()">
+        <div class="aptidao-acoes">
+          <button class="toggle-btn">▼</button>
+          <button class="btn-remover-aptidao" onclick="removerAptidaoAmaldicoada(this); event.stopPropagation();">🗑️</button>
+        </div>
+      </div>
+      <div class="aptidao-descricao" style="display: none;">
+        <textarea placeholder="Descrição da aptidão amaldiçoada..."></textarea>
+      </div>
+    </div>
+    
+    <!-- Botão Adicionar Aptidão -->
+    <button class="btn-adicionar-aptidao" onclick="adicionarAptidaoAmaldicoada()">
+      ➕ Adicionar Aptidão Amaldiçoada
+    </button>
+    
+  </div>
+</div>
+    
+    <!-- Seção de Feitiços Amaldiçoados (à direita das aptidões) -->
+<div class="feiticos-amaldicoados-container">
+  
+  <!-- Nível 0 -->
+  <div class="nivel-feitico-grupo">
+    <div class="nivel-feitico-header" onclick="toggleNivelFeitico(this)">
+      <span class="nivel-feitico-titulo">FEITIÇOS NÍVEL 0</span>
+      <span class="nivel-feitico-custo">[Custo 0]</span>
+      <button class="toggle-btn-nivel">▼</button>
+    </div>
+    <div class="nivel-feitico-conteudo" style="display: none;">
+      <div class="feiticos-lista" id="feiticos-nivel-0">
+        <button class="btn-adicionar-feitico" onclick="adicionarFeitico('feiticos-nivel-0')">
+          ➕ Adicionar Feitiço
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Nível 1 -->
+  <div class="nivel-feitico-grupo">
+    <div class="nivel-feitico-header" onclick="toggleNivelFeitico(this)">
+      <span class="nivel-feitico-titulo">FEITIÇOS NÍVEL 1</span>
+      <span class="nivel-feitico-custo">[Custo 2]</span>
+      <button class="toggle-btn-nivel">▼</button>
+    </div>
+    <div class="nivel-feitico-conteudo" style="display: none;">
+      <div class="feiticos-lista" id="feiticos-nivel-1">
+        <button class="btn-adicionar-feitico" onclick="adicionarFeitico('feiticos-nivel-1')">
+          ➕ Adicionar Feitiço
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Nível 2 -->
+  <div class="nivel-feitico-grupo">
+    <div class="nivel-feitico-header" onclick="toggleNivelFeitico(this)">
+      <span class="nivel-feitico-titulo">FEITIÇOS NÍVEL 2</span>
+      <span class="nivel-feitico-custo">[Custo 5]</span>
+      <button class="toggle-btn-nivel">▼</button>
+    </div>
+    <div class="nivel-feitico-conteudo" style="display: none;">
+      <div class="feiticos-lista" id="feiticos-nivel-2">
+        <button class="btn-adicionar-feitico" onclick="adicionarFeitico('feiticos-nivel-2')">
+          ➕ Adicionar Feitiço
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Nível 3 -->
+  <div class="nivel-feitico-grupo">
+    <div class="nivel-feitico-header" onclick="toggleNivelFeitico(this)">
+      <span class="nivel-feitico-titulo">FEITIÇOS NÍVEL 3</span>
+      <span class="nivel-feitico-custo">[Custo 8]</span>
+      <button class="toggle-btn-nivel">▼</button>
+    </div>
+    <div class="nivel-feitico-conteudo" style="display: none;">
+      <div class="feiticos-lista" id="feiticos-nivel-3">
+        <button class="btn-adicionar-feitico" onclick="adicionarFeitico('feiticos-nivel-3')">
+          ➕ Adicionar Feitiço
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Nível 4 -->
+  <div class="nivel-feitico-grupo">
+    <div class="nivel-feitico-header" onclick="toggleNivelFeitico(this)">
+      <span class="nivel-feitico-titulo">FEITIÇOS NÍVEL 4</span>
+      <span class="nivel-feitico-custo">[Custo 12]</span>
+      <button class="toggle-btn-nivel">▼</button>
+    </div>
+    <div class="nivel-feitico-conteudo" style="display: none;">
+      <div class="feiticos-lista" id="feiticos-nivel-4">
+        <button class="btn-adicionar-feitico" onclick="adicionarFeitico('feiticos-nivel-4')">
+          ➕ Adicionar Feitiço
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Nível 5 -->
+  <div class="nivel-feitico-grupo">
+    <div class="nivel-feitico-header" onclick="toggleNivelFeitico(this)">
+      <span class="nivel-feitico-titulo">FEITIÇOS NÍVEL 5</span>
+      <span class="nivel-feitico-custo">[Custo 20]</span>
+      <button class="toggle-btn-nivel">▼</button>
+    </div>
+    <div class="nivel-feitico-conteudo" style="display: none;">
+      <div class="feiticos-lista" id="feiticos-nivel-5">
+        <button class="btn-adicionar-feitico" onclick="adicionarFeitico('feiticos-nivel-5')">
+          ➕ Adicionar Feitiço
+        </button>
+      </div>
+    </div>
+  </div>
+  
+</div>
+      
+  </div>
+    <!-- Expansão de Domínio e Técnica Máxima (abaixo de tudo) -->
+<div class="dominios-tecnicas-wrapper">
+  
+  <!-- Expansão de Domínio (Esquerda - 50%) -->
+  <div class="dominio-card">
+    <div class="dominio-header" onclick="toggleDominio(this)">
+      <span class="dominio-titulo">EXPANSÃO DE DOMÍNIO</span>
+      <button class="toggle-btn-dominio">▼</button>
+    </div>
+    <div class="dominio-conteudo" style="display: none;">
+      <div class="dominio-campo">
+        <label>NOME DA EXPANSÃO</label>
+        <input type="text" placeholder="Nome da Expansão de Domínio">
+      </div>
+      <div class="dominio-campo">
+        <label>TIPO DE EXPANSÃO</label>
+        <input type="text" placeholder="Ex: Letal, Não-Letal">
+      </div>
+      <div class="dominio-campo">
+        <label>DESCRIÇÃO DA EXPANSÃO</label>
+        <textarea placeholder="Descrição detalhada da Expansão de Domínio..."></textarea>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Técnica Máxima (Direita - 50%) -->
+  <div class="tecnica-maxima-card">
+    <div class="tecnica-maxima-header" onclick="toggleTecnicaMaxima(this)">
+      <span class="tecnica-maxima-titulo">TÉCNICA MÁXIMA</span>
+      <button class="toggle-btn-tecnica-maxima">▼</button>
+    </div>
+    <div class="tecnica-maxima-conteudo" style="display: none;">
+      <div class="tecnica-maxima-campo">
+        <label>NOME DA TÉCNICA</label>
+        <input type="text" placeholder="Nome da Técnica Máxima">
+      </div>
+      <div class="tecnica-maxima-campo">
+        <label>DESCRIÇÃO DA TÉCNICA MÁXIMA</label>
+        <textarea placeholder="Descrição detalhada da Técnica Máxima..."></textarea>
+      </div>
+    </div>
+  </div>
+  
+</div>
+  </div>
+</div>
+
+<div id="aba-invocacoes" class="aba-conteudo" style="display:none;">
+    <div style="padding: 15px; text-align: center; background: #1a1a1a; border-bottom: 2px solid var(--header-color); margin-bottom: 10px;">
+        <button class="btn-aba" onclick="criarNovoCardInvocacao()" style="background: #28a745; padding: 10px 20px; font-size: 1rem;">
+            + ADICIONAR NOVA INVOCAÇÃO
+        </button>
+    </div>
+
+    <div id="invocacoes-container" class="invocacoes-grid">
+        </div>
+</div>
+
+<div id="aba-treinamentos" class="aba-conteudo" style="display:none;">
+    <div class="header-secao-treino">TREINAMENTOS</div>
+    
+    <div class="treinamentos-grid">
+        <div class="card-treino">
+            <div class="treino-header">Treino de Agilidade</div>
+            <div class="treino-etapas">
+                <div class="etapa-item" data-tooltip="Seu movimento aumenta em 1,5 metros.">
+            <span>1ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Você recebe um bônus de +2 em rolagens de Acrobacia. ">
+            <span>2ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Você recebe um bônus de +2 em rolagens de Iniciativa. ">
+            <span>3ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Você recebe um bônus de +2 em rolagens de Reflexos. ">
+            <span>4ª Etapa</span><input type="checkbox">
+        </div>
+            </div>
+            <div class="treino-completo-titulo">Treinamento Completo</div>
+            <div class="treino-descricao">
+                <textarea>Com grande velocidade e agilidade, você se torna rápido e capaz de um nível superior de mobilidade e esquivas. Sua margem necessária para conseguir um sucesso crítico em um TR de Reflexos reduz em 2. Seu Deslocamento aumenta em 4,5 metros.</textarea>
+            </div>
+        </div>
+
+        <div class="card-treino">
+            <div class="treino-header">Treino de Barreiras</div>
+            <div class="treino-etapas">
+                <div class="etapa-item" data-tooltip="Os pontos de vida das paredes da sua Técnica de Barreira aumentam em 10.">
+            <span>1ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Aumenta seu Nível de Aptidão em Barreiras em +1.">
+            <span>2ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Os pontos de vida das paredes da sua Técnica de Barreira aumentam em 10.">
+            <span>3ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Ao utilizar Técnicas de Barreira, o máximo de paredes que você pode criar aumenta em 2.">
+            <span>4ª Etapa</span><input type="checkbox">
+        </div>
+            </div>
+            <div class="treino-completo-titulo">Treinamento Completo</div>
+            <div class="treino-descricao">
+                <textarea>Toda parede que você criar com Técnicas de Barreira recebe RD igual ao seu Nível de Aptidão em Barreiras.</textarea>
+            </div>
+        </div>
+
+        <div class="card-treino">
+            <div class="treino-header">Treino de Compreensão</div>
+            <div class="treino-etapas">
+                <div class="etapa-item" data-tooltip="Seu máximo de energia amaldiçoada aumenta em 2.">
+            <span>1ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Você recebe um bônus de +1 em rolagens de Feitiçaria e Ocultismo.">
+            <span>2ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Seu máximo de energia amaldiçoada aumenta em 3.">
+            <span>3ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Você recebe um bônus de +2 em rolagens de Feitiçaria e Ocultismo.">
+            <span>4ª Etapa</span><input type="checkbox">
+        </div>
+            </div>
+            <div class="treino-completo-titulo">Treinamento Completo</div>
+            <div class="treino-descricao">
+                <textarea>Você chega muito perto de compreender profundamente a energia amaldiçoada, tornando-se familiar com ela e entendendo melhor uma parte dela. Você aumenta um nível de aptidão a sua escolha em 1.</textarea>
+            </div>
+        </div>
+
+        <div class="card-treino">
+            <div class="treino-header">Controle de Energia</div>
+            <div class="treino-etapas">
+                <div class="etapa-item" data-tooltip="Seu máximo de energia amaldiçoada aumenta em 2.">
+            <span>1ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Quando uma cena de combate iniciar, você recebe 4 pontos de energia amaldiçoada temporários.">
+            <span>2ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Seu máximo de energia amaldiçoada aumenta em 3.">
+            <span>3ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Seu Nível de Aptidão em Controle e Leitura aumenta em 1.">
+            <span>4ª Etapa</span><input type="checkbox">
+        </div>
+            </div>
+            <div class="treino-completo-titulo">Treinamento Completo</div>
+            <div class="treino-descricao">
+                <textarea>Em uma situação de combate, imerso no fervor da batalha, você consegue gerar energia: durante uma cena de combate, no começo de toda rodada, você ganha PE Temporário igual a metade do seu bônus de maestria.</textarea>
+            </div>
+        </div>
+
+        <div class="card-treino">
+            <div class="treino-header">Treino de Domínios</div>
+            <div class="treino-etapas">
+                <div class="etapa-item" data-tooltip="Você recebe um bônus de +1  em rolagens para confrontos e contestações de expansões.">
+            <span>1ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="A área da sua Expansão de Domínio aumenta em 3 metros.">
+            <span>2ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Você recebe um bônus de +1 em rolagens para confrontos e contestações de expansões.">
+            <span>3ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Você pode colocar um efeito adicional em sua expansão de domínio.">
+            <span>4ª Etapa</span><input type="checkbox">
+        </div>
+            </div>
+            <div class="treino-completo-titulo">Treinamento Completo</div>
+            <div class="treino-descricao">
+                <textarea>Você se torna um mestre das expansões, entendo como conseguir a moldar perfeitamente diante a sua vontade e necessidade do momento. Você recebe a aptidão amaldiçoada Modificação Completa.</textarea>
+            </div>
+        </div>
+
+        <div class="card-treino">
+            <div class="treino-header">Energia Reversa</div>
+            <div class="treino-etapas">
+                <div class="etapa-item" data-tooltip="A quantidade de pontos de energia reversa que você pode gastar em Aptidões de Energia Reversa aumenta em 1.">
+            <span>1ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Seu Nível de Aptidão em Energia Reversa aumenta em 1.">
+            <span>2ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="O custo para regenerar um membro ou ferida interna com Regeneração Aprimorada é reduzido em 2 pontos de energia reversa.">
+            <span>3ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Você também pode usar Fluxo Constante para regenerar membros, ao invés de apenas se curar.">
+            <span>4ª Etapa</span><input type="checkbox">
+        </div>
+            </div>
+            <div class="treino-completo-titulo">Treinamento Completo</div>
+            <div class="treino-descricao">
+                <textarea>Você pode usar a aptidão amaldiçoada Regeneração Aprimorada para curar sua exaustão de técnica após usar expansão de domínio, reduzindo em um turno para 2 pontos de energia reversa gastos.</textarea>
+            </div>
+        </div>
+
+        <div class="card-treino">
+            <div class="treino-header">Treino de Luta</div>
+            <div class="treino-etapas">
+                <div class="etapa-item" data-tooltip="O dano de seus ataques desarmados aumenta em 1 nível.">
+            <span>1ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Você recebe +2 em sua Defesa e em rolagens para as ações Agarrar, Derrubar e Empurrar.">
+            <span>2ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="O dano de seus ataques desarmados aumenta em 1 nível.">
+            <span>3ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="O dano de seus ataques desarmados aumenta em 2 níveis.">
+            <span>4ª Etapa</span><input type="checkbox">
+        </div>
+            </div>
+            <div class="treino-completo-titulo">Treinamento Completo</div>
+            <div class="treino-descricao">
+                <textarea>Você recebe acesso ao efeito de crítico de ataques desarmados (pugilato). Além disso, você pode, uma vez por rodada, escolher realizar uma rolagem de Luta com vantagem, seja ela para um ataque ou para uma manobra.</textarea>
+            </div>
+        </div>
+
+        <div class="card-treino">
+            <div class="treino-header">Manejo de Arma</div>
+            <div class="treino-etapas">
+                <div class="etapa-item" data-tooltip="Escolha uma arma: você recebe maestria nela. Caso já possua, adicione +2 em rolagens de dano com ela.">
+            <span>1ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Você recebe um bônus de +1 em jogadas de ataque com a arma escolhida.">
+            <span>2ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Enquanto estiver manejando a arma escolhida, você recebe acesso ao efeito crítico dela.">
+            <span>3ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Você recebe +1 em rolagens de ataque e +2 em rolagens de dano com a arma escolhida.">
+            <span>4ª Etapa</span><input type="checkbox">
+        </div>
+            </div>
+            <div class="treino-completo-titulo">Treinamento Completo</div>
+            <div class="treino-descricao">
+                <textarea>Enquanto estiver manejando a arma escolhida, ela recebe uma propriedade de ferramenta amaldiçoada adicional.</textarea>
+            </div>
+        </div>
+
+        <div class="card-treino">
+            <div class="treino-header">Treino de Perícia</div>
+            <div class="treino-etapas">
+                <div class="etapa-item" data-tooltip="Escolha uma perícia: você recebe maestria nela. Caso já possua, adicione +1 em testes de perícia usando-a.">
+            <span>1ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Duas vezes por descanso, você pode escolher realizar um teste da perícia escolhida para o treinamento com vantagem.">
+            <span>2ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Você se torna especialista na perícia escolhida. Caso já seja, adicione +2 em testes de perícia usando-a.">
+            <span>3ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Uma vez por cena, você pode escolher obter um sucesso garantido em um teste da perícia escolhida, desde que não seja um teste oposto.">
+            <span>4ª Etapa</span><input type="checkbox">
+        </div>
+            </div>
+            <div class="treino-completo-titulo">Treinamento Completo</div>
+            <div class="treino-descricao">
+                <textarea>Caso realize um teste da perícia escolhida e obtenha um resultado menor do que 5 no d20, você pode o rolar novamente e manter o melhor resultado.</textarea>
+            </div>
+        </div>
+
+        <div class="card-treino">
+            <div class="treino-header">Potencial Físico</div>
+            <div class="treino-etapas">
+                <div class="etapa-item" data-tooltip="Seu máximo de pontos de vigor aumenta em 2.">
+            <span>1ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Você recebe 2 pontos de atributo para distribuir entre seus atributos físicos, podendo superar o seu limite atual neles.">
+            <span>2ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Seu máximo de pontos de vigor aumenta em 3.">
+            <span>3ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Você recebe uma Dádiva do Céu adicional.">
+            <span>4ª Etapa</span><input type="checkbox">
+        </div>
+            </div>
+            <div class="treino-completo-titulo">Treinamento Completo</div>
+            <div class="treino-descricao">
+                <textarea>Durante uma cena de combate, no começo de toda rodada, você recupera uma quantidade de pontos de vigor igual a metade do seu bônus de maestria.</textarea>
+            </div>
+        </div>
+
+        <div class="card-treino">
+            <div class="treino-header">Treino de Resistência</div>
+            <div class="treino-etapas">
+                <div class="etapa-item" data-tooltip="Seus pontos de vida máximos aumentam em 4.">
+            <span>1ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Sua quantidade de dados de vida disponíveis por descanso aumenta em 2.">
+            <span>2ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Recebe um bônus de +2 em rolagens de Fortitude.">
+            <span>3ª Etapa</span><input type="checkbox">
+        </div>
+        <div class="etapa-item" data-tooltip="Seus pontos de vida máximos aumentam em 6. ">
+            <span>4ª Etapa</span><input type="checkbox">
+        </div>
+            </div>
+            <div class="treino-completo-titulo">Treinamento Completo</div>
+            <div class="treino-descricao">
+                <textarea>Sua margem necessária para conseguir um sucesso crítico em um TR de Fortitude reduz em 2. Uma vez por cena, você ignora a primeira falha em testes de morte. Seus pontos de vida máximos aumentam em mais 10.</textarea>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script  src="./script.js"></script>
+
+  </body>
+  
+</html>
